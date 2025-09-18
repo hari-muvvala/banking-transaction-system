@@ -1,0 +1,47 @@
+@startuml
+' Simple ER-style diagram for Banking Transaction System (MVP)
+
+class Account {
+  +String accountId  <<PK>>
+  --
+  String accountHolderName
+  Double balance
+  String status
+  String createdAt
+}
+
+class Transaction {
+  +String transactionId  <<PK>>
+  --
+  String accountId       <<FK>>
+  String type            : DEPOSIT | WITHDRAW
+  Double amount
+  String status
+  String timestamp
+}
+
+class AuditLog {
+  +String logId  <<PK>>
+  --
+  String entity        : Account|Transaction
+  String entityId
+  String action
+  String details
+  String timestamp
+}
+
+' relationships (conceptual)
+Account "1" <-- "0..*" Transaction : "has"
+Account "1" <-- "0..*" AuditLog : "has-audit"
+
+note right of Account
+  Partition key: accountId
+  Keep attributes small (avoid wide items)
+end note
+
+note right of Transaction
+  Use transactionId as PK; store accountId as attribute
+  Consider TTL for old transactions (later)
+end note
+
+@enduml
