@@ -18,7 +18,7 @@
 - Scaffold Java project skeleton (Maven/Gradle structure).
 - Prepare code to connect to DynamoDB.
 
-### Day 3
+## Day 3
 
 - **Scaffolded Java project** using Maven: created `src/main/java` structure and added a `Main` class that prints “Banking Transaction System – Skeleton Ready.”  
 - **Added Maven configuration** (`pom.xml`) to use Java 17 and include the AWS SDK dependencies for DynamoDB.  
@@ -28,7 +28,7 @@
 **Next step:**
 - implement the Account model and repository, and write a simple test to save and load an account.
 
-### Day 4
+## Day 4
 
 - **Implemented `Account` model** as a DynamoDB bean (partition key `accountId`, with attributes `accountHolderName` and `balance`).  
 - **Added `AccountRepository`** using the DynamoDB Enhanced Client (`put` to save an account, `get` to load by ID).  
