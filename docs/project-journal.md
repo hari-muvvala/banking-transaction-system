@@ -5,7 +5,7 @@
 - Next: design Accounts table (partition key only) and create Java project skeleton.
 
 ## Day 2
-- Created 'Accounts' table in DynamoDB (Partition key: 'accountId' of type String).
+- Created `Accounts` table in DynamoDB (Partition key: `accountId` of type String).
 - Added first sample item:
 	- accountId: "acc-1001"
 	- accountHoldername: "Hari Gopal"
