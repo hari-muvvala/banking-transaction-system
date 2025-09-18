@@ -35,3 +35,14 @@
 
 **Next step:**
 - Implement deposit/withdraw operations that update the account balance, and start drafting ER diagrams.
+
+## Day 5
+- Implemented `AccountService` class to support deposit and withdraw operations.
+- Modified `AccountSmokeTest` to:
+  - Save an account (`acc-1002`, initial balance 500.0)
+  - Deposit 200 and withdraw 50 using the service
+  - Verify updated balance (650.0) by reading account again
+- Verified end-to-end flow of repository + service + smoke test in DynamoDB.
+
+**Next step:**
+- Begin drafting system diagrams (ER diagram, high-level architecture).
