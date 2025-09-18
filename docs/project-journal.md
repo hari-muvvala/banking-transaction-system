@@ -71,3 +71,22 @@
 **Next step**
 - Add atomic balance update logic in `AccountService` using DynamoDB conditional writes.
 - Extend design for Transaction and AuditLog entities.
+
+## Day 7
+**What I did**
+- Added `Transaction` model (PK: `transactionId`) with fields: `accountId`, `type` (`DEPOSIT`/`WITHDRAW`), `amount`, `status`, `timestamp`.
+- Implemented `TransactionRepository` using DynamoDB Enhanced Client.
+- Extended `AccountService`:
+  - Updates `Accounts.balance`.
+  - Writes a `Transaction` item per operation (`status="SUCCESS"`).
+- Updated `AccountSmokeTest` to call `AccountService`:
+  - Start balance = 500.0 → deposit 200 → withdraw 50 → final balance = 650.0.
+- Verified in AWS Console:
+  - `Accounts` shows updated balance.
+  - `Transactions` lists entries for `acc-1002`.
+
+**Why it matters**
+- MVP now persists both current state (**balance**) and operation history (**transactions**), which is enough for a simple demo.
+
+**Next step (minimal)**
+- No code changes required. Keep using AWS Console to verify runs.
