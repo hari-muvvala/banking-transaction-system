@@ -42,8 +42,8 @@
 - Modified `AccountSmokeTest` to:
   - Create account (`acc-1002`, initial balance 500.0).
   - Deposit 200 and withdraw 50 using the service.
-  - Verified updated balance (650.0) by reading account again.
-  - Verified end-to-end flow of repository + service + smoke test in DynamoDB.
+  - Verify updated balance (650.0) by reading account again.
+- **Noted** that the current update pattern is **read → modify → put**. This is fine for MVP learning, but **not safe under concurrent updates** (we’ll revisit later).
 
 **Why it matters**
 - Encapsulates account operations in a dedicated service class.
@@ -54,23 +54,22 @@
 
 ## Day 6
 **What I did**
-- Added **ER Diagram** (`er-diagram.puml` + `er-diagram.png`) showing:
-  - `Account` entity (accountId PK, accountHolderName, balance, status, createdAt).
-  - `Transaction` entity (transactionId PK, accountId FK, type, amount, status, timestamp).
-  - `AuditLog` entity (logId PK, entity, entityId, action, details, timestamp).
-  - Relationships: Account has Transactions, Account/Transaction has AuditLogs.
-- Added **Architecture Diagram** (`architecture.puml` + `architecture.png`) showing flow:
-  - User → AccountService/Main → AccountRepository → DynamoDB (Accounts table).
+- Added **ER Diagram** (`docs/diagrams/er-diagram.puml` + `er-diagram.png`) showing:
+  - `Account` (PK `accountId`, `accountHolderName`, `balance`, `status`, `createdAt`)
+  - `Transaction` (PK `transactionId`, FK `accountId`, `type`, `amount`, `status`, `timestamp`)
+  - `AuditLog` (PK `logId`, `entity`, `entityId`, `action`, `details`, `timestamp`)
+  - Relationships: Account has Transactions; Account/Transaction has AuditLogs.
+- Added **Architecture Diagram** (`docs/diagrams/architecture.puml` + `architecture.png`) showing flow:
+  - User → AccountSmokeTest/Main → AccountService → AccountRepository → DynamoDB (Accounts table).
   - Run/Debug passes AWS credentials via environment variables.
 - Committed both diagrams into `docs/diagrams/`.
 
 **Why it matters**
-- ER diagram = focus on logical data model (Accounts, Transactions, AuditLogs).
-- Architecture diagram = focus on system flow and responsibilities.
+- ER diagram = logical data model (Accounts, Transactions, AuditLogs).
+- Architecture diagram = system flow and responsibilities.
 
 **Next step**
-- Add atomic balance update logic in `AccountService` using DynamoDB conditional writes.
-- Extend design for Transaction and AuditLog entities.
+- **Extend design by introducing `Transaction` entity.** Keep **atomic balance update** (conditional writes) as a **later improvement if required**.
 
 ## Day 7
 **What I did**
@@ -86,7 +85,8 @@
   - `Transactions` lists entries for `acc-1002`.
 
 **Why it matters**
-- MVP now persists both current state (**balance**) and operation history (**transactions**), which is enough for a simple demo.
+- MVP now persists both current state (**balance**) and operation history (**transactions**), enough for a simple demo.
+- **This completes the basic requirements up to transaction history (Day 7 scope of the 10-day plan).**
 
 **Next step (minimal)**
 - No code changes required. Keep using AWS Console to verify runs.
