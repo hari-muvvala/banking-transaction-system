@@ -111,3 +111,26 @@
 - Extend test coverage if needed (edge cases, e.g., negative deposits).  
 - Keep this as the **unit testing milestone (Day 8 scope)**.  
 - Move to Day 9 for build verification and demo preparation.
+
+## Day 9
+**What I did**
+- Made the build reliable:
+  - Set IntelliJ → Maven to use **Java 17**.
+  - Ran `mvn clean install` → **BUILD SUCCESS**, tests **3/3 green**.
+  - Verified app runs via Maven (`exec:java`) and prints the skeleton message.
+- POM cleanup:
+  - Added UTF-8 encodings.
+  - Switched compiler to `<release>17</release>` (removes source/target warnings).
+- Repository hygiene:
+  - Expanded `.gitignore` (ignore `target/`, `.idea/`, `.DS_Store`, etc.).
+  - Removed previously tracked build/IDE files from the repo.
+- Artifact check:
+  - JAR created at `target/banking-transaction-system-0.1.0.jar`.
+
+**Why it matters**
+- Consistent builds from CLI and IntelliJ, no noisy warnings or junk files.
+- Clean repo state ahead of demo.
+
+**Next step**
+- Add a short `README.md` with “Build & Run” instructions.
+- (Optional later) Add a couple more edge-case tests.
