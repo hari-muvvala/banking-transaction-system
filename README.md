@@ -18,15 +18,13 @@ A simple Java + DynamoDB project to demonstrate account operations (deposit, wit
 ## Repository Layout
 ```
 docs/
-  └── diagrams/
-      ├── architecture.puml / .png
-      └── er-diagram.puml / .png
-  └── project-journal.md
-
+ ├── diagrams/
+ │   ├── architecture.puml / .png
+ │   └── er-diagram.puml / .png
+ └── project-journal.md
 src/
-  └── main/java/com/atlas/banking/...    # app code (services, repos, models, Main)
-  └── test/java/com/atlas/banking/...    # unit tests
-
+ ├── main/java/com/atlas/banking/...   # app code (services, repos, models, Main)
+ └── test/java/com/atlas/banking/...   # unit tests
 pom.xml
 README.md
 ```
@@ -34,16 +32,19 @@ README.md
 ## Build & Run
 
 Clean and build the project:
+
 ```bash
 mvn clean install
 ```
 
 Run the app (prints skeleton message):
+
 ```bash
 mvn -q -DskipTests exec:java -Dexec.mainClass=com.atlas.banking.Main
 ```
 
 Expected output:
+
 ```
 Banking Transaction System – Skeleton Ready
 ```
@@ -51,11 +52,12 @@ Banking Transaction System – Skeleton Ready
 ## Tests
 
 Run unit tests:
+
 ```bash
 mvn test
 ```
 
-All tests run locally with JUnit 5 and Mockito (no AWS credentials required).  
+All tests run locally with Mockito (no AWS credentials required).  
 Covers deposit, withdraw, and insufficient funds scenarios.
 
 ## Diagrams
@@ -63,7 +65,7 @@ Covers deposit, withdraw, and insufficient funds scenarios.
 - docs/diagrams/architecture.png
 
 ## Project Journal
-See docs/project-journal.md for daily progress (Day 1 → Day 9+).
+See `docs/project-journal.md` for daily progress (Day 1 → Day 9+).
 
 ## License
 MIT
