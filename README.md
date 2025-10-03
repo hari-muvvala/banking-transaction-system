@@ -1,3 +1,7 @@
+![Java](https://img.shields.io/badge/Java-17-blue)
+![Build](https://img.shields.io/badge/Build-Maven-success)
+![Tests](https://img.shields.io/badge/Tests-JUnit%205%20%2B%20Mockito-green)
+
 # Banking Transaction System
 
 A simple Java + DynamoDB project to demonstrate account operations (deposit, withdraw) and transaction history.
