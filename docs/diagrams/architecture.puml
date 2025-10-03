@@ -9,12 +9,14 @@ actor User as user
 
 component "AccountSmokeTest / Main\n(entry point)" as entry
 component "AccountService\n(business rules)" as svc
-component "AccountRepository\n(data access)" as repo
-database "DynamoDB\n(Accounts table)" as ddb
+
+component "AccountRepository\n(data access)" as accRepo
+component "TransactionRepository\n(data access)" as txRepo
+database  "DynamoDB\nAccounts table" as accTable
+database  "DynamoDB\nTransactions table" as txTable
 
 note right of entry
-  Reads AWS credentials from
-  Run/Debug environment variables:
+  Reads AWS credentials from Run/Debug env vars:
   AWS_ACCESS_KEY_ID
   AWS_SECRET_ACCESS_KEY
   AWS_SESSION_TOKEN
@@ -22,13 +24,19 @@ note right of entry
 end note
 
 user --> entry : run
-entry --> svc : call deposit()/withdraw()
-svc --> repo : put(account), get(id)
-repo --> ddb : DynamoDbClient (SDK v2)
+entry --> svc  : call deposit()/withdraw()
+svc  --> accRepo : get(id), put(account)
+svc  --> txRepo  : put(transaction)
+accRepo --> accTable : DynamoDbEnhancedClient (SDK v2)
+txRepo  --> txTable  : DynamoDbEnhancedClient (SDK v2)
 
-component "TransactionRepository" as txrepo
+' Future (not in MVP code yet)
 component "AuditLogRepository" as audit
-txrepo ..> ddb : (future)
-audit  ..> ddb : (future)
+audit ..> accTable : (future)
+audit ..> txTable  : (future)
+
+' Tests
+component "JUnit 5 + Mockito\n(unit tests)" as tests
+tests ..> svc : mock repos,\nverify behavior
 
 @enduml
