@@ -2,8 +2,6 @@
 
 A simple Java + DynamoDB project to demonstrate account operations (deposit, withdraw) and transaction history.
 
----
-
 ## Features
 - Account model stored in DynamoDB  
 - Deposit / Withdraw with balance updates  
@@ -11,15 +9,11 @@ A simple Java + DynamoDB project to demonstrate account operations (deposit, wit
 - Unit tests with JUnit 5 and Mockito (no AWS required)  
 - Built with Maven  
 
----
-
 ## Tech stack
 - Java 17 (Temurin)  
 - Maven 3.9.x  
 - AWS SDK v2 (DynamoDB Enhanced Client)  
 - JUnit 5, Mockito  
-
----
 
 ## Repository layout
 ```
@@ -34,20 +28,18 @@ A simple Java + DynamoDB project to demonstrate account operations (deposit, wit
 ├─ pom.xml
 └─ README.md
 ```
----
-
 ## Build & Run
 
 Clean and build:
 ```
 mvn clean install
 ```
+```
 mvn -q -DskipTests exec:java -Dexec.mainClass=com.atlas.banking.Main
+```
 ```
 Banking Transaction System – Skeleton Ready
 ```
----
-
 ## Tests
 
 Run unit tests:
@@ -56,13 +48,9 @@ mvn test
 ```
 All tests run locally with Mockito (no AWS credentials needed).
 
----
-
 ## Diagrams
 - docs/diagrams/er-diagram.png
 - docs/diagrams/architecture.png
-
----
 
 ## Project Journal
 See docs/project-journal.md for daily progress (Day 1 → Day 9+).
