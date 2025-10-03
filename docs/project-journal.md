@@ -9,9 +9,9 @@
 ## Day 2
 - Created `Accounts` table in DynamoDB (Partition key: `accountId` of type String).
 - Added first sample item:
-	- accountId: "acc-1001"
-	- accountHoldername: "Hari Gopal"
-	- balance = 1000
+  - accountId: "acc-1001"
+  - accountHoldername: "Hari Gopal"
+  - balance = 1000
 - Verified by scanning items in the table.
 
 **Next step:**
@@ -90,3 +90,26 @@
 
 **Next step (minimal)**
 - No code changes required. Keep using AWS Console to verify runs.
+
+## Day 8
+**What I did**
+- Added **JUnit 5 dependencies** (`junit-jupiter-api`, `junit-jupiter-engine`) and **Mockito dependency** in `pom.xml`.
+- Created `src/test/java/com/atlas/banking/AccountServiceTest`.
+- Used **JUnit 5** to structure tests (`@BeforeEach`, `@Test`, `assertEquals`, `assertThrows`).
+- Used **Mockito** to mock `AccountRepository` and `TransactionRepository` so tests run **locally** without AWS.
+- Implemented three tests for `AccountService`:
+  - **deposit_increases_balance_and_writes_txn**
+  - **withdraw_decreases_balance_and_writes_txn**
+  - **withdraw_throws_for_insufficient_funds**
+
+**Why it matters**
+- Unit tests now verify service logic without needing live AWS.
+- Covered both **happy paths** (deposit, withdraw) and **failure path** (insufficient funds).
+- Tests are **repeatable**, **automated**, and fast — unlike smoke tests where results had to be eyeballed.
+- Learned difference:
+  - JUnit = testing framework.
+  - Mockito = mocking framework.
+
+**Next step**
+- Extend test coverage for edge cases if time permits.
+- (Optional) Explore integration testing with DynamoDB Local — not required for MVP.
