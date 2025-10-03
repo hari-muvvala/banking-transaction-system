@@ -4,7 +4,7 @@
 - Created repo and added MVP brief (FR/NFR).
 
 **Next step:**
-- design Accounts table (partition key only) and create Java project skeleton.
+- Design Accounts table (partition key only) and create Java project skeleton.
 
 ## Day 2
 - Created `Accounts` table in DynamoDB (Partition key: `accountId` of type String).
@@ -43,7 +43,7 @@
   - Create account (`acc-1002`, initial balance 500.0).
   - Deposit 200 and withdraw 50 using the service.
   - Verify updated balance (650.0) by reading account again.
-- **Noted** that the current update pattern is **read → modify → put**. This is fine for MVP learning, but **not safe under concurrent updates** (we’ll revisit later).
+- **Noted** that the current update pattern is **read → modify → put**. This is fine for MVP learning, but **not safe under concurrent updates** (to revisit later).
 
 **Why it matters**
 - Encapsulates account operations in a dedicated service class.
@@ -69,7 +69,8 @@
 - Architecture diagram = system flow and responsibilities.
 
 **Next step**
-- **Extend design by introducing `Transaction` entity.** Keep **atomic balance update** (conditional writes) as a **later improvement if required**.
+- Extend design by introducing `Transaction` entity.
+- Keep **atomic balance update** (conditional writes) as a later improvement if required.
 
 ## Day 7
 **What I did**
@@ -85,31 +86,31 @@
   - `Transactions` lists entries for `acc-1002`.
 
 **Why it matters**
-- MVP now persists both current state (**balance**) and operation history (**transactions**), enough for a simple demo.
-- **This completes the basic requirements up to transaction history (Day 7 scope of the 10-day plan).**
+- MVP now persists both current state (**balance**) and operation history (**transactions**).
+- This completes the basic requirements up to transaction history (Day 7 scope of the 10-day plan).
 
-**Next step (minimal)**
+**Next step**
 - No code changes required. Keep using AWS Console to verify runs.
 
 ## Day 8
 **What I did**
-- Added **JUnit 5 dependencies** (`junit-jupiter-api`, `junit-jupiter-engine`) and **Mockito dependency** in `pom.xml`.
-- Created `src/test/java/com/atlas/banking/AccountServiceTest`.
-- Used **JUnit 5** to structure tests (`@BeforeEach`, `@Test`, `assertEquals`, `assertThrows`).
-- Used **Mockito** to mock `AccountRepository` and `TransactionRepository` so tests run **locally** without AWS.
-- Implemented three tests for `AccountService`:
-  - **deposit_increases_balance_and_writes_txn**
-  - **withdraw_decreases_balance_and_writes_txn**
-  - **withdraw_throws_for_insufficient_funds**
+- Introduced **unit testing** with JUnit 5 and Mockito.
+- Added `AccountServiceTest` with scenarios:
+  - Deposit increases balance.
+  - Withdraw decreases balance.
+  - Withdraw with insufficient funds throws exception.
+- Mocked `AccountRepository` and `TransactionRepository` to isolate tests from DynamoDB and external dependencies.
+- Updated `pom.xml` with dependencies for:
+  - `junit-jupiter-api`
+  - `junit-jupiter-engine`
+  - `mockito-core`
+- Verified tests in IntelliJ: all cases passed successfully.
 
 **Why it matters**
-- Unit tests now verify service logic without needing live AWS.
-- Covered both **happy paths** (deposit, withdraw) and **failure path** (insufficient funds).
-- Tests are **repeatable**, **automated**, and fast — unlike smoke tests where results had to be eyeballed.
-- Learned difference:
-  - JUnit = testing framework.
-  - Mockito = mocking framework.
+- Ensures service logic works independently of the database.
+- Provides fast feedback without requiring AWS credentials.
+- Establishes a foundation for further automated testing.
 
 **Next step**
-- Extend test coverage for edge cases if time permits.
-- (Optional) Explore integration testing with DynamoDB Local — not required for MVP.
+- Extend test coverage with edge cases if needed (e.g., zero-amount deposits, negative inputs).
+- (Optional, later) explore integration testing using **DynamoDB Local** for closer-to-real verification, though not required for MVP.
