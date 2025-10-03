@@ -22,16 +22,18 @@ public class AccountService {
         Account acc = accountRepo.get(accountId);
         if (acc == null) throw new IllegalArgumentException("Account not found: " + accountId);
 
-        acc.setBalance(acc.getBalance() + amount);
+        double current = acc.getBalance() == null ? 0.0 : acc.getBalance();
+        acc.setBalance(current + amount);
         accountRepo.put(acc);
 
+        Instant now = Instant.now();
         Transaction t = new Transaction();
         t.setTransactionId(UUID.randomUUID().toString());
         t.setAccountId(accountId);
         t.setType("DEPOSIT");
         t.setAmount(amount);
         t.setStatus("SUCCESS");
-        t.setTimestamp(Instant.now().toString());
+        t.setTimestamp(now.toString());
         txnRepo.put(t);
     }
 
@@ -41,18 +43,21 @@ public class AccountService {
 
         Account acc = accountRepo.get(accountId);
         if (acc == null) throw new IllegalArgumentException("Account not found: " + accountId);
-        if (acc.getBalance() < amount) throw new IllegalArgumentException("Insufficient funds");
 
-        acc.setBalance(acc.getBalance() - amount);
+        double current = acc.getBalance() == null ? 0.0 : acc.getBalance();
+        if (current < amount) throw new IllegalStateException("Insufficient funds");
+
+        acc.setBalance(current - amount);
         accountRepo.put(acc);
 
+        Instant now = Instant.now();
         Transaction t = new Transaction();
         t.setTransactionId(UUID.randomUUID().toString());
         t.setAccountId(accountId);
         t.setType("WITHDRAW");
         t.setAmount(amount);
         t.setStatus("SUCCESS");
-        t.setTimestamp(Instant.now().toString());
+        t.setTimestamp(now.toString());
         txnRepo.put(t);
     }
 }

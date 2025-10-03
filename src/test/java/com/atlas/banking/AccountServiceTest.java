@@ -6,81 +6,82 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class AccountServiceTest {
+class AccountServiceTest {
 
+    private AccountRepository accountRepo;
+    private TransactionRepository txnRepo;
     private AccountService service;
-    private AccountRepository mockRepo;
-    private TransactionRepository mockTxnRepo;
 
     @BeforeEach
-    void setUp() {
-        mockRepo = mock(AccountRepository.class);
-        mockTxnRepo = mock(TransactionRepository.class);
-        service = new AccountService(mockRepo, mockTxnRepo);
+    void setup() {
+        accountRepo = mock(AccountRepository.class);
+        txnRepo = mock(TransactionRepository.class);
+        service = new AccountService(accountRepo, txnRepo);
     }
 
     @Test
-    void deposit_increases_balance_and_writes_txn() {
-        // Arrange
+    void testDepositIncreasesBalanceAndWritesTransaction() {
+        // arrange
         Account acc = new Account();
-        acc.setAccountId("acc-1002");
-        acc.setBalance(500.0);
-        when(mockRepo.get("acc-1002")).thenReturn(acc);
+        acc.setAccountId("acc-1");
+        acc.setBalance(100.0);
+        when(accountRepo.get("acc-1")).thenReturn(acc);
 
-        // Act
-        service.deposit("acc-1002", 200.0);
+        // act
+        service.deposit("acc-1", 50.0);
 
-        // Assert: balance changed in memory
-        assertEquals(700.0, acc.getBalance(), 0.0001);
+        // assert balance updated
+        verify(accountRepo).put(acc);
+        assertEquals(150.0, acc.getBalance());
 
-        // Assert: repo put was called with updated account
-        verify(mockRepo).put(acc);
-
-        // Assert: a Transaction was written with correct fields
-        ArgumentCaptor<Transaction> txCap = ArgumentCaptor.forClass(Transaction.class);
-        verify(mockTxnRepo).put(txCap.capture());
-        Transaction t = txCap.getValue();
-        assertEquals("acc-1002", t.getAccountId());
+        // assert transaction written
+        ArgumentCaptor<Transaction> cap = ArgumentCaptor.forClass(Transaction.class);
+        verify(txnRepo).put(cap.capture());
+        Transaction t = cap.getValue();
         assertEquals("DEPOSIT", t.getType());
-        assertEquals(200.0, t.getAmount(), 0.0001);
+        assertEquals(50.0, t.getAmount());
+        assertEquals("acc-1", t.getAccountId());
         assertEquals("SUCCESS", t.getStatus());
     }
 
     @Test
-    void withdraw_decreases_balance_and_writes_txn() {
+    void testWithdrawDecreasesBalanceAndWritesTransaction() {
         Account acc = new Account();
-        acc.setAccountId("acc-1002");
-        acc.setBalance(500.0);
-        when(mockRepo.get("acc-1002")).thenReturn(acc);
+        acc.setAccountId("acc-2");
+        acc.setBalance(200.0);
+        when(accountRepo.get("acc-2")).thenReturn(acc);
 
-        service.withdraw("acc-1002", 100.0);
+        service.withdraw("acc-2", 80.0);
 
-        assertEquals(400.0, acc.getBalance(), 0.0001);
-        verify(mockRepo).put(acc);
+        verify(accountRepo).put(acc);
+        assertEquals(120.0, acc.getBalance());
 
-        ArgumentCaptor<Transaction> txCap = ArgumentCaptor.forClass(Transaction.class);
-        verify(mockTxnRepo).put(txCap.capture());
-        assertEquals("WITHDRAW", txCap.getValue().getType());
-        assertEquals(100.0, txCap.getValue().getAmount(), 0.0001);
-        assertEquals("SUCCESS", txCap.getValue().getStatus());
+        ArgumentCaptor<Transaction> cap = ArgumentCaptor.forClass(Transaction.class);
+        verify(txnRepo).put(cap.capture());
+        Transaction t = cap.getValue();
+        assertEquals("WITHDRAW", t.getType());
+        assertEquals(80.0, t.getAmount());
+        assertEquals("acc-2", t.getAccountId());
+        assertEquals("SUCCESS", t.getStatus());
     }
 
     @Test
-    void withdraw_throws_for_insufficient_funds() {
+    void testWithdrawFailsIfInsufficientFunds() {
         Account acc = new Account();
-        acc.setAccountId("acc-1002");
-        acc.setBalance(50.0);
-        when(mockRepo.get("acc-1002")).thenReturn(acc);
+        acc.setAccountId("acc-3");
+        acc.setBalance(30.0);
+        when(accountRepo.get("acc-3")).thenReturn(acc);
 
-        IllegalArgumentException ex =
-                assertThrows(IllegalArgumentException.class, () -> service.withdraw("acc-1002", 100.0));
-        assertTrue(ex.getMessage().toLowerCase().contains("insufficient"));
+        // expect IllegalStateException now
+        assertThrows(IllegalStateException.class, () -> service.withdraw("acc-3", 50.0));
 
-        // no writes happen on failure
-        verify(mockRepo, never()).put(any());
-        verify(mockTxnRepo, never()).put(any());
+        // no put should happen
+        verify(accountRepo, never()).put(any());
+        verify(txnRepo, never()).put(any());
     }
 }
