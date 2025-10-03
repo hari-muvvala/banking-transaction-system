@@ -1,5 +1,8 @@
 @startuml
-' Simple ER-style diagram for Banking Transaction System (MVP)
+' ER-style diagram for Banking Transaction System (MVP)
+
+skinparam shadowing false
+skinparam monochrome true
 
 class Account {
   +String accountId  <<PK>>
@@ -7,41 +10,46 @@ class Account {
   String accountHolderName
   Double balance
   String status
-  String createdAt
+  String createdAt        ' ISO-8601 (e.g., 2025-09-20T10:15:30Z)
 }
 
 class Transaction {
   +String transactionId  <<PK>>
   --
-  String accountId       <<FK>>
-  String type            : DEPOSIT | WITHDRAW
+  String accountId       <<FK to Account.accountId>>
+  String type            ' DEPOSIT | WITHDRAW
   Double amount
   String status
-  String timestamp
+  String timestamp       ' ISO-8601
 }
 
 class AuditLog {
   +String logId  <<PK>>
   --
-  String entity        : Account|Transaction
+  String entity        ' Account | Transaction
   String entityId
   String action
   String details
-  String timestamp
+  String timestamp     ' ISO-8601
 }
 
-' relationships (conceptual)
+' Relationships (conceptual)
 Account "1" <-- "0..*" Transaction : "has"
-Account "1" <-- "0..*" AuditLog : "has-audit"
+Account "1" <-- "0..*" AuditLog    : "audit of"  #LightGray
 
 note right of Account
-  Partition key: accountId
-  Keep attributes small (avoid wide items)
+  DynamoDB: Partition key = accountId
+  Keep item small; avoid wide attributes
 end note
 
 note right of Transaction
-  Use transactionId as PK; store accountId as attribute
-  Consider TTL for old transactions (later)
+  Partition key = transactionId
+  Store accountId as attribute
+  Consider TTL for old transactions (future)
+end note
+
+note right of AuditLog
+  Planned/future: not required for MVP
 end note
 
 @enduml
