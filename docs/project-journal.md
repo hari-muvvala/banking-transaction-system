@@ -94,23 +94,20 @@
 
 ## Day 8
 **What I did**
-- Introduced **unit testing** with JUnit 5 and Mockito.
-- Added `AccountServiceTest` with scenarios:
-  - Deposit increases balance.
-  - Withdraw decreases balance.
-  - Withdraw with insufficient funds throws exception.
-- Mocked `AccountRepository` and `TransactionRepository` to isolate tests from DynamoDB and external dependencies.
-- Updated `pom.xml` with dependencies for:
-  - `junit-jupiter-api`
-  - `junit-jupiter-engine`
-  - `mockito-core`
-- Verified tests in IntelliJ: all cases passed successfully.
+- Introduced **JUnit 5** as the testing framework for unit tests.  
+- Added **Mockito** dependency to mock repositories (so tests run locally without needing AWS credentials).  
+- Wrote `AccountServiceTest` covering three cases:
+  - Deposit increases balance correctly.
+  - Withdraw decreases balance correctly.
+  - Withdraw with insufficient funds throws exception.  
+- All three tests executed successfully in IntelliJ (green check marks).
 
 **Why it matters**
-- Ensures service logic works independently of the database.
-- Provides fast feedback without requiring AWS credentials.
-- Establishes a foundation for further automated testing.
+- Provides **automated verification** of account operations (no need to rely on manual smoke test output).  
+- Tests can be re-run anytime after changes to ensure nothing is broken.  
+- Mocking with Mockito decouples tests from DynamoDB → faster, safer, repeatable.  
 
 **Next step**
-- Extend test coverage with edge cases if needed (e.g., zero-amount deposits, negative inputs).
-- (Optional, later) explore integration testing using **DynamoDB Local** for closer-to-real verification, though not required for MVP.
+- Extend test coverage if needed (edge cases, e.g., negative deposits).  
+- Keep this as the **unit testing milestone (Day 8 scope)**.  
+- Move to Day 9 for build verification and demo preparation.
